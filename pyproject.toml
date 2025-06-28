@@ -1,0 +1,7 @@
+[project]
+name = "lstm-memorizer"
+version = "0.0.1"
+description = " PoC for embedding text files into the weights of a character-level LSTM neural network "
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
