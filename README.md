@@ -1,5 +1,7 @@
 # Char-level LSTM Memorizer PoC
 
+[LSTM or Transformer as "malware packer"](https://bednarskiwsieci.pl/en/blog/lstm-or-transformer-as-malware-packer/).
+
 A simple proof-of-concept demonstrating how to **embed any text file** (e.g., source code) into the weights of a character-level LSTM neural network model and then **accurately reconstruct** its contents during inference.
 
 ## Features
