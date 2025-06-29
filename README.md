@@ -18,6 +18,7 @@ A simple proof-of-concept demonstrating how to **embed any text file** (e.g., so
 * Python 3.12+
 * PyTorch 2.7.1+
 * NumPy 2.3.1+
+* Safetensors 0.5.3+
 
 Use `uv` to manage dependencies. If you don't have `uv` installed, you can install it via pip:
 
@@ -53,28 +54,28 @@ uv run main.py train ./examples/bubble_sort.py \
     --hidden 32 \
     --layers 2 \
     --lr 1e-3 \
-    --weights ./output/model.pt
+    --weights ./output/model.safetensors
 ```
 
 ```
 Using device: mps
-Epoch 1/4000 loss=4.0145
-Epoch 500/4000 loss=0.6894
-Epoch 1000/4000 loss=0.1471
-Epoch 1500/4000 loss=0.0501
-Epoch 2000/4000 loss=0.0251
-Epoch 2500/4000 loss=0.0140
-Epoch 3000/4000 loss=0.0088
-Epoch 3500/4000 loss=0.0108
-Epoch 4000/4000 loss=0.0053
-Model saved to ./output/model.pt
+Epoch 1/4000 loss=4.0081
+Epoch 500/4000 loss=0.5532
+Epoch 1000/4000 loss=0.1054
+Epoch 1500/4000 loss=0.0395
+Epoch 2000/4000 loss=0.0220
+Epoch 2500/4000 loss=0.0120
+Epoch 3000/4000 loss=0.0076
+Epoch 3500/4000 loss=0.0051
+Epoch 4000/4000 loss=0.0060
+Model saved to ./output/model.safetensors
 ```
 
 ### Generating
 
 ```bash
 uv run main.py generate ./examples/bubble_sort.py \
-    --weights ./output/model.pt \
+    --weights ./output/model.safetensors \
     --output ./output/generated.py \
     --hidden 32 \
     --layers 2
