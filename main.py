@@ -6,9 +6,7 @@ from src.generate import generate_text
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Char-level LSTM Memorizer PoC"
-    )
+    parser = argparse.ArgumentParser(description="Char-level LSTM Memorizer PoC")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Train subcommand
@@ -29,7 +27,9 @@ def main():
         "--lr", type=float, default=1e-3, help="Learning rate for optimizer"
     )
     train_parser.add_argument(
-        "--weights", default="model.pt", help="Path to save trained model weights"
+        "--weights",
+        default="model.safetensors",
+        help="Path to save trained model weights",
     )
 
     # Generate subcommand
@@ -40,7 +40,7 @@ def main():
         "input", help="Path to original text file (for sequence length)"
     )
     gen_parser.add_argument(
-        "--weights", default="model.pt", help="Path to trained model weights"
+        "--weights", default="model.safetensors", help="Path to trained model weights"
     )
     gen_parser.add_argument(
         "--output", default="generated.txt", help="Path to write generated text"
