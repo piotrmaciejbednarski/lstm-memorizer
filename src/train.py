@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 import torch
 import torch.optim as optim
@@ -5,6 +6,9 @@ from torch.nn import CrossEntropyLoss
 
 from .data import build_vocab, text_to_indices
 from .model import CharLSTM
+
+from safetensors.torch import save_file
+import json
 
 
 def train_model(input_path, epochs, lr, hidden, layers, weights_out):
@@ -47,8 +51,14 @@ def train_model(input_path, epochs, lr, hidden, layers, weights_out):
         if ep == 1 or ep % 500 == 0:
             print(f"Epoch {ep}/{epochs} loss={loss.item():.4f}", file=sys.stderr)
 
-    # Save checkpoint
-    torch.save(
-        {"model_state": model.state_dict(), "stoi": stoi, "itos": itos}, weights_out
-    )
+    # Save model weights
+    save_file(model.state_dict(), weights_out)
+
+    weights_path = Path(weights_out).absolute().parent
+    vocab_path = weights_path / "vocab.json"
+
+    # Save vocabulary
+    with open(vocab_path, "w", encoding="utf-8") as f:
+        json.dump({"stoi": stoi, "itos": itos}, f, ensure_ascii=False)
+
     print(f"Model saved to {weights_out}", file=sys.stderr)
