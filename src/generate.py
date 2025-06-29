@@ -1,7 +1,10 @@
+from pathlib import Path
 import torch
 from .data import indices_to_text
 from .model import CharLSTM
 import hashlib
+from safetensors.torch import load_file
+import json
 
 
 def greedy_generate(model, start_symbol, length, itos, device):
@@ -24,6 +27,7 @@ def sha256_file(path):
             h.update(chunk)
     return h.hexdigest()
 
+
 def generate_text(weights, input_path, output_path, hidden, layers):
     # Load raw for length
     raw = open(input_path, "rb").read()
@@ -32,9 +36,20 @@ def generate_text(weights, input_path, output_path, hidden, layers):
     full = BOS + text
     length = len(full)
 
-    # Load model
-    checkpoint = torch.load(weights, map_location="cpu")
-    stoi, itos = checkpoint["stoi"], checkpoint["itos"]
+    # Load model weights
+    weights_path = Path(weights).absolute().parent
+    state_dict = load_file(weights)
+    vocab_file = weights_path / "vocab.json"
+
+    # Load vocabulary
+    with open(vocab_file, "r", encoding="utf-8") as f:
+        vocab = json.load(f)
+
+    stoi = vocab["stoi"]
+    itos_raw = vocab["itos"]
+
+    # Convert string keys to int
+    itos = {int(k): v for k, v in itos_raw.items()}
     device = torch.device(
         "cuda"
         if torch.cuda.is_available()
@@ -43,7 +58,7 @@ def generate_text(weights, input_path, output_path, hidden, layers):
         else "cpu"
     )
     model = CharLSTM(len(stoi), hidden_size=hidden, num_layers=layers).to(device)
-    model.load_state_dict(checkpoint["model_state"])
+    model.load_state_dict(state_dict)
 
     # Generate
     out = greedy_generate(model, stoi[BOS], length, itos, device)[1:]
