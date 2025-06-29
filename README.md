@@ -42,7 +42,7 @@ pip install uv
 
 ## Example
 
-One of the generated examples can be found in the `example` directory. The model weights `model.pt` were trained on `bubble_sort.py`.
+One of the generated examples can be found in the `example` directory. The model weights `model.safetensors` were trained on `bubble_sort.py`.
 
 You can run the entire process in encoding mode and then decoding mode to verify that the generated file is identical to the original.
 
