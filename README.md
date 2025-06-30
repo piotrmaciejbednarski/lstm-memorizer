@@ -8,17 +8,17 @@ A simple proof-of-concept demonstrating how to **embed any text file** (e.g., so
 
 ## Features
 
-* Builds a character-level vocabulary + a special Beginning-of-Sequence (BOS) token.
-* Trains an LSTM on a single file until overfitting (memorization).
-* Generates the entire character sequence starting from the BOS token.
-* Compares SHA-256 checksums of the original and generated files.
+- Builds a character-level vocabulary + a special Beginning-of-Sequence (BOS) token.
+- Trains an LSTM on a single file until overfitting (memorization).
+- Generates the entire character sequence starting from the BOS token.
+- Compares SHA-256 checksums of the original and generated files.
 
 ## Requirements
 
-* Python 3.12+
-* PyTorch 2.7.1+
-* NumPy 2.3.1+
-* Safetensors 0.5.3+
+- Python 3.12+
+- PyTorch 2.7.1+
+- NumPy 2.3.1+
+- Safetensors 0.5.3+
 
 Use `uv` to manage dependencies. If you don't have `uv` installed, you can install it via pip:
 
@@ -34,6 +34,7 @@ pip install uv
    git clone https://github.com/piotrmaciejbednarski/lstm-memorizer.git
    cd lstm-memorizer
    ```
+
 2. Synchronize using `uv`:
 
    ```bash
@@ -90,13 +91,25 @@ Hashes match.
 
 ## Extensions and Ideas
 
-* Swap out LSTM for a Transformer decoder-only model.
-* Experiment with different network depths and widths.
-* Use mixed precision training.
-* Checkpointing and resuming training.
-* Scheduler for learning rate.
-* Early stopping.
+You can use any RNN or Transformer architecture for this task, as the concept of "overfitting the neural network" applies universally. I chose LSTM for its simplicity and suitability for this example, as we do not require the attention mechanism present in Transformers. The task at hand is deterministic, where the decoder's sequence should always be the same, making LSTM a fitting choice.
+
+- Experiment with different network depths and widths.
+- Use mixed precision training.
+- Checkpointing and resuming training.
+- Scheduler for learning rate.
+- Early stopping.
 
 ## License
 
 This project is released under the MIT License. See [LICENSE](LICENSE) for details.
+
+**If you use this code in your research or projects, please cite the original article:**
+
+```bibtex
+@misc{bednarski2025lstm,
+  author = {Bednarski, Piotr Maciej},
+  title = {LSTM or Transformer as “malware packer”},
+  year={2025}, month={Jun},
+  url = {https://bednarskiwsieci.pl/en/blog/lstm-or-transformer-as-malware-packer/}
+}
+```
