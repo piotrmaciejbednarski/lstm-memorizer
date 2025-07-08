@@ -137,25 +137,27 @@ This heatmap reveals how the LSTM distributes information across its hidden stat
 ![Attention Heatmap](charts/attention_heatmap.png)
 
 **What it visualizes:**
-- **Both axes**: Character positions in the sequence
-- **Color**: Correlation between hidden states at different positions (-1 to +1)
-- **Red**: Strong positive correlation
-- **Blue**: Strong negative correlation
-- **White**: No correlation
+- **Both axes** – Character positions inside *the single training file*
+- **Colour** – Pearson correlation between hidden states at two positions  
+  \([-1, 1]\) after normalisation
+  - **Red** – Strong positive correlation
+  - **Blue** – Strong negative correlation
+  - **White** – Near-zero correlation
 
-**Key patterns observed:**
-- **Diagonal band**: Strong local correlations between adjacent characters
-- **Block structures**: Code segments (functions, loops) form coherent representational units
-- **Long-range correlations**: Red dots far from diagonal indicate the model discovered relationships between distant code elements (e.g., opening/closing brackets, variable definitions and usage)
-- **Negative correlations**: Blue regions show where different code structures are encoded with opposing patterns
+**Patterns you can expect**
+- **Diagonal band** – High similarity between neighbouring positions; a direct consequence of the sequential nature of the data and the LSTM
+- **Repeating patches / “blocks”** – Areas where the same *literal* substrings (e.g. multiple spaces, repeated braces) occur in the file; these are artefacts of memorising one concrete sequence, *not* abstract code blocks
+- **Off-diagonal red spots** – Positions that share the same characters or very similar short substrings (e.g. several ‘(’) and are therefore encoded alike
+- **Blue regions** – Characters or substrings that never appear together in this file are pushed into opposing directions in hidden-state space
 
-**Structural insights:**
-- **Positions 0-10**: Function header `def bubble_sort(arr):`
-- **Positions 20-30**: Outer loop structure with strong internal correlations
-- **Positions 35-45**: Inner loop with conditional statements
-- **Cross-correlations**: The model learned to associate related code elements like matching brackets, variable scopes, and control flow structures
+**How to interpret this in the context of the PoC**
+- The LSTM was trained to convergence on **one file**, so every structure you see reflects how the network compresses *that exact sequence*.
+- The heat-map therefore visualises memorisation; it does not constitute evidence that the model has learned general, hierarchical notions such as “functions”, “loops”, or “variable scope”.
+- Similar structures may vanish—or look completely different—when you feed an unseen file to the same model.
 
-This visualization demonstrates that the LSTM doesn't just memorize character sequences but learns **hierarchical code representations** and **structural relationships** within the program.
+**Take-away**
+
+The figure confirms that the network stores enough information in its hidden states to reproduce the file byte-for-byte. It does **not** demonstrate hierarchical code understanding or any form of generalisation beyond the training sample.
 
 ## Extensions and Ideas
 
