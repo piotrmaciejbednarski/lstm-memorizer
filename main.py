@@ -3,6 +3,7 @@ import sys
 
 from src.train import train_model
 from src.generate import generate_text
+from src.visualize import generate_demo_charts
 
 
 def main():
@@ -52,6 +53,28 @@ def main():
         "--layers", type=int, default=2, help="Number of LSTM layers"
     )
 
+    # Visualize subcommand
+    vis_parser = subparsers.add_parser(
+        "visualize", help="Generate demonstration charts"
+    )
+    vis_parser.add_argument(
+        "input", help="Path to original text file used for training"
+    )
+    vis_parser.add_argument(
+        "--weights",
+        default="./output/model.safetensors",
+        help="Path to trained model weights",
+    )
+    vis_parser.add_argument(
+        "--hidden", type=int, default=32, help="Hidden size of LSTM"
+    )
+    vis_parser.add_argument(
+        "--layers", type=int, default=2, help="Number of LSTM layers"
+    )
+    vis_parser.add_argument(
+        "--output-dir", default="charts", help="Directory to save charts"
+    )
+
     args = parser.parse_args()
 
     if args.command == "train":
@@ -70,6 +93,14 @@ def main():
             output_path=args.output,
             hidden=args.hidden,
             layers=args.layers,
+        )
+    elif args.command == "visualize":
+        generate_demo_charts(
+            weights_path=args.weights,
+            input_path=args.input,
+            hidden_size=args.hidden,
+            num_layers=args.layers,
+            output_dir=args.output_dir,
         )
     else:
         parser.print_help()
