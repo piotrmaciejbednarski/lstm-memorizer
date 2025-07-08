@@ -89,6 +89,72 @@ Output SHA256: 95a82277b56978eeb1de2dd3d3c0e46f1b7ebd96bfe6a4dbedcd18bb40be1b25
 Hashes match.
 ```
 
+### Visualization
+
+Generate demonstration charts to analyze model behavior:
+
+```bash
+uv run main.py visualize ./examples/bubble_sort.py \
+    --weights ./output/model.safetensors \
+    --hidden 32 \
+    --layers 2 \
+    --output-dir charts
+```
+
+```
+Training loss plot saved to charts/training_loss.png
+Hidden states heatmap saved to charts/hidden_states_heatmap.png
+Attention-like heatmap saved to charts/attention_heatmap.png
+All demo charts generated in charts/
+```
+
+## Results & Analysis
+
+### Training Loss
+![Training Loss](charts/training_loss.png)
+
+The training loss plot shows exponential decay from ~4.0 to ~0.006 over 4000 epochs, demonstrating successful memorization of the input file. The smooth convergence indicates stable learning without overfitting oscillations.
+
+### Hidden States Heatmap
+![Hidden States Heatmap](charts/hidden_states_heatmap.png)
+
+**What it visualizes:**
+- **X-axis**: Character position in sequence
+- **Y-axis**: Hidden unit number in LSTM layer
+- **Color**: Activation strength of each hidden unit
+
+**Key insights:**
+- **Vertical patterns**: Different hidden units specialize in different types of characters or code structures
+- **Horizontal patterns**: Sequential dependencies and context propagation through the LSTM
+- **Bright regions**: Areas where the model focuses computational resources
+- **Dark regions**: Less active units or characters that require minimal processing
+
+This heatmap reveals how the LSTM distributes information across its hidden state, showing which neural units are responsible for encoding different parts of the code structure.
+
+### Attention-like Correlation Matrix
+![Attention Heatmap](charts/attention_heatmap.png)
+
+**What it visualizes:**
+- **Both axes**: Character positions in the sequence
+- **Color**: Correlation between hidden states at different positions (-1 to +1)
+- **Red**: Strong positive correlation
+- **Blue**: Strong negative correlation
+- **White**: No correlation
+
+**Key patterns observed:**
+- **Diagonal band**: Strong local correlations between adjacent characters
+- **Block structures**: Code segments (functions, loops) form coherent representational units
+- **Long-range correlations**: Red dots far from diagonal indicate the model discovered relationships between distant code elements (e.g., opening/closing brackets, variable definitions and usage)
+- **Negative correlations**: Blue regions show where different code structures are encoded with opposing patterns
+
+**Structural insights:**
+- **Positions 0-10**: Function header `def bubble_sort(arr):`
+- **Positions 20-30**: Outer loop structure with strong internal correlations
+- **Positions 35-45**: Inner loop with conditional statements
+- **Cross-correlations**: The model learned to associate related code elements like matching brackets, variable scopes, and control flow structures
+
+This visualization demonstrates that the LSTM doesn't just memorize character sequences but learns **hierarchical code representations** and **structural relationships** within the program.
+
 ## Extensions and Ideas
 
 You can use any RNN or Transformer architecture for this task, as the concept of "overfitting the neural network" applies universally. I chose LSTM for its simplicity and suitability for this example, as we do not require the attention mechanism present in Transformers. The task at hand is deterministic, where the decoder's sequence should always be the same, making LSTM a fitting choice.
