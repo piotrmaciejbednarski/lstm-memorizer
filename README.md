@@ -19,6 +19,8 @@ A simple proof-of-concept demonstrating how to **embed any text file** (e.g., so
 - PyTorch 2.7.1+
 - NumPy 2.3.1+
 - Safetensors 0.5.3+
+- Matplotlib 3.10.3+
+- Ruff 0.12.2+ (optional)
 
 Use `uv` to manage dependencies. If you don't have `uv` installed, you can install it via pip:
 
